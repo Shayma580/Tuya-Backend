@@ -64,15 +64,15 @@ async function pollDeviceStatus() {
     };
 
     broadcast(transformed);
-    console.log(`✅ Polling successful at ${new Date().toISOString()}`);
+    console.log(`Polling successful at ${new Date().toISOString()}`);
 
   } catch (err) {
     consecutiveFailures++;
-    console.error(`❌ Polling failed (attempt ${consecutiveFailures}):`, err.message);
+    console.error(`Polling failed (attempt ${consecutiveFailures}):`, err.message);
 
     // Check if we should restart the server
     if (consecutiveFailures >= maxConsecutiveFailures) {
-      console.error(`🚨 CRITICAL: ${consecutiveFailures} consecutive failures. Restarting server in 10 seconds...`);
+      console.error(`CRITICAL: ${consecutiveFailures} consecutive failures. Restarting server in 10 seconds...`);
 
       // Send a final error message to connected clients
       broadcast({
@@ -82,7 +82,7 @@ async function pollDeviceStatus() {
 
       // Wait 10 seconds then restart
       setTimeout(() => {
-        console.error(`🔄 RESTARTING SERVER due to persistent API failures`);
+        console.error(`RESTARTING SERVER due to persistent API failures`);
         process.exit(1); // Exit with error code to trigger restart
       }, 20000);
 
@@ -92,7 +92,7 @@ async function pollDeviceStatus() {
     // Implement exponential backoff
     if (consecutiveFailures >= maxFailures) {
       pollingInterval = Math.min(pollingInterval * 2, maxInterval);
-      console.log(`⚠️  Increasing polling interval to ${pollingInterval}ms due to ${consecutiveFailures} consecutive failures`);
+      console.log(`Increasing polling interval to ${pollingInterval}ms due to ${consecutiveFailures} consecutive failures`);
     }
 
     // Don't broadcast on failure to avoid sending stale data
